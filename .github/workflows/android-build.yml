@@ -12,6 +12,16 @@ jobs:
       # Optional env for react-native-config; add more via repository secrets if needed
       APP_NAME: StorefrontApp
       APP_IDENTIFIER: com.storefront.app
+      # Backend + Storefront
+      FLEETBASE_HOST: ${{ secrets.FLEETBASE_HOST }}
+      STOREFRONT_KEY: ${{ secrets.STOREFRONT_KEY }}
+      FLEETBASE_KEY: ${{ secrets.FLEETBASE_KEY }}
+      # Maps + Payments
+      GOOGLE_MAPS_KEY: ${{ secrets.GOOGLE_MAPS_KEY }}
+      STRIPE_KEY: ${{ secrets.STRIPE_KEY }}
+      # Optional social auth (uncomment if used)
+      # FACEBOOK_APP_ID: ${{ secrets.FACEBOOK_APP_ID }}
+      # FACEBOOK_CLIENT_TOKEN: ${{ secrets.FACEBOOK_CLIENT_TOKEN }}
 
     steps:
       - name: Checkout
@@ -32,6 +42,43 @@ jobs:
       - name: Install dependencies
         run: |
           yarn install --frozen-lockfile || yarn install
+
+      - name: Create .env from secrets (Release only)
+        if: ${{ secrets.FLEETBASE_HOST != '' && github.event_name == 'workflow_dispatch' || secrets.FLEETBASE_HOST != '' && github.ref == 'refs/heads/main' }}
+        run: |
+          cat > .env << 'EOF'
+          APP_NAME=${APP_NAME}
+          APP_IDENTIFIER=${APP_IDENTIFIER}
+          FLEETBASE_HOST=${FLEETBASE_HOST}
+          STOREFRONT_KEY=${STOREFRONT_KEY}
+          FLEETBASE_KEY=${FLEETBASE_KEY}
+          GOOGLE_MAPS_KEY=${GOOGLE_MAPS_KEY}
+          STRIPE_KEY=${STRIPE_KEY}
+          EOF
+
+      - name: Create .env with dummy values (fallback)
+        if: ${{ secrets.FLEETBASE_HOST == '' }}
+        run: |
+          echo "No secrets detected, writing dummy .env for test build"
+          cat > .env << 'EOF'
+          APP_NAME=My Test Storefront
+          APP_IDENTIFIER=com.example.storefrontapp
+          FLEETBASE_HOST=https://api.example-fleetbase.test
+          STOREFRONT_KEY=store_test_1234567890abcdef
+          FLEETBASE_KEY=fleetbase_test_sk_abcdefghijklmnopqrstuvwxyz
+          GOOGLE_MAPS_KEY=AIzaSyDUMMY-KEY-FOR-DEV-ONLY-1234567890
+          STRIPE_KEY=pk_test_51DummyPublishableKey0000000000000000
+          EOF
+
+      - name: Show injected env (redacted)
+        run: |
+          echo "APP_NAME=$APP_NAME"
+          echo "APP_IDENTIFIER=$APP_IDENTIFIER"
+          echo "FLEETBASE_HOST set? $([ -n "$FLEETBASE_HOST" ] && echo yes || echo no)"
+          echo "STOREFRONT_KEY set? $([ -n "$STOREFRONT_KEY" ] && echo yes || echo no)"
+          echo "FLEETBASE_KEY set? $([ -n "$FLEETBASE_KEY" ] && echo yes || echo no)"
+          echo "GOOGLE_MAPS_KEY set? $([ -n "$GOOGLE_MAPS_KEY" ] && echo yes || echo no)"
+          echo "STRIPE_KEY set? $([ -n "$STRIPE_KEY" ] && echo yes || echo no)"
 
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
@@ -69,7 +116,10 @@ jobs:
           ANDROID_STOREFRONT_APP_UPLOAD_STORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
           ANDROID_STOREFRONT_APP_UPLOAD_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
           ANDROID_STOREFRONT_APP_UPLOAD_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
-        run: ./gradlew :app:bundleRelease
+        run: |
+          # If .env exists, react-native-config will pick it up during build
+          ls -la .env || true
+          ./gradlew :app:bundleRelease
 
       - name: Upload Release AAB
         if: ${{ secrets.ANDROID_KEYSTORE_B64 != '' }}
@@ -77,4 +127,3 @@ jobs:
         with:
           name: app-release.aab
           path: android/app/build/outputs/bundle/release/app-release.aab
-
