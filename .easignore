@@ -1,0 +1,16 @@
+# Speed up EAS local source uploads (EAS also clones from your git remote in CI)
+node_modules
+android/.gradle
+android/app/build
+android/build
+ios/Pods
+ios/build
+.git
+.idea
+.vscode
+*.log
+dist
+build
+coverage
+.DS_Store
+

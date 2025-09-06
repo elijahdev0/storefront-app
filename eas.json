@@ -1,0 +1,40 @@
+{
+  "cli": {
+    "requireCommit": false,
+    "appVersionSource": "remote"
+  },
+  "build": {
+    "android-apk": {
+      "android": {
+        "gradleCommand": ":app:assembleRelease",
+        "applicationArchivePath": "android/app/build/outputs/apk/release/app-release.apk"
+      }
+    },
+    "android-aab": {
+      "android": {
+        "gradleCommand": ":app:bundleRelease",
+        "applicationArchivePath": "android/app/build/outputs/bundle/release/app-release.aab"
+      }
+    },
+    "android-debug": {
+      "credentialsSource": "local",
+      "android": {
+        "gradleCommand": ":app:assembleDebug",
+        "applicationArchivePath": "android/app/build/outputs/apk/debug/app-debug.apk"
+      }
+    },
+    "ios-simulator": {
+      "ios": {
+        "scheme": "StorefrontApp",
+        "buildConfiguration": "Debug",
+        "simulator": true
+      }
+    },
+    "ios-release": {
+      "ios": {
+        "scheme": "StorefrontApp",
+        "buildConfiguration": "Release"
+      }
+    }
+  }
+}

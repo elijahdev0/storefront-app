@@ -1,4 +1,9 @@
 {
-    "name": "StorefrontApp",
-    "displayName": "StorefrontApp"
+  "name": "StorefrontApp",
+  "displayName": "StorefrontApp",
+  "extra": {
+    "eas": {
+      "projectId": "883efe1b-a339-465e-91f7-027559f9ebc3"
+    }
+  }
 }

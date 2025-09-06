@@ -91,6 +91,11 @@ android {
             appLinkScheme: project.env.get("APP_LINK_PREFIX") ?: "storefrontapp"
         ]
         resValue "string", "build_config_package", "com.storefront.app"
+        // Provide default string resources for services that read from AndroidManifest
+        // Values can be overridden via EAS secrets or local .env
+        resValue "string", "FACEBOOK_APP_ID", project.env.get("FACEBOOK_APP_ID") ?: ""
+        resValue "string", "FACEBOOK_CLIENT_TOKEN", project.env.get("FACEBOOK_CLIENT_TOKEN") ?: ""
+        resValue "string", "GOOGLE_MAPS_API_KEY", project.env.get("GOOGLE_MAPS_KEY") ?: ""
     }
     signingConfigs {
         release {
