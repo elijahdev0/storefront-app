@@ -6,6 +6,12 @@ set -e
 # Print each command to stdout before executing it.
 set -x
 
+# Install bundler
+gem install bundler
+
+# Install gems
+bundle install
+
 # Install yarn dependencies
 yarn install
 
