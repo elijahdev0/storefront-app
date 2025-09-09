@@ -1,0 +1,18 @@
+- [x] Apply global branding & design system
+- [x] Centralize mock data provider
+- [x] Build home dashboard with service tiles and promos
+- [x] Implement ride-hailing flow UI
+- [x] Implement food delivery flow UI
+- [x] Implement grocery flow UI
+- [x] Implement parcel delivery flow UI
+- [x] Implement wallet interface
+- [x] Implement promotions & rewards UI
+- [x] Implement chat interface
+- [x] Implement notifications/inbox
+- [x] Implement orders list
+- [x] Expand profile & settings
+- [x] Implement help center module
+- [x] Implement ratings & reviews
+- [x] Add localization support
+- [x] Finalize navigation & transitions
+- [x] Run lint and tests
