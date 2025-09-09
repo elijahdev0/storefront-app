@@ -1,6 +1,7 @@
 import React from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { TamaguiProvider, Theme, useTheme } from 'tamagui';
+import { Platform } from 'react-native';
+import { TamaguiProvider, Theme } from 'tamagui';
 import { Toasts } from '@backpackapp-io/react-native-toast';
 import { PortalProvider, PortalHost } from '@gorhom/portal';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -9,7 +10,7 @@ import { AuthProvider } from './src/contexts/AuthContext';
 import { SocketClusterProvider } from './src/contexts/SocketClusterContext';
 import { CartProvider } from './src/contexts/CartContext';
 import { LanguageProvider } from './src/contexts/LanguageContext';
-import AppNavigator from './src/navigation/AppNavigator';
+import SuperAppNavigator from './src/navigation/SuperAppNavigator';
 import TestNavigator, { TestTabNavigator } from './src/navigation/TestNavigator';
 import { ThemeProvider, useThemeContext } from './src/contexts/ThemeContext';
 import { NotificationProvider } from './src/contexts/NotificationContext';
@@ -31,7 +32,7 @@ function AppContent(): React.JSX.Element {
                                     <AuthProvider>
                                         <SocketClusterProvider>
                                             <CartProvider>
-                                                <AppNavigator />
+                                                <SuperAppNavigator />
                                                 <Toasts extraInsets={{ bottom: Platform.OS === 'android' ? 25 : 80 }} defaultStyle={getDefaultToastStyle()} />
                                                 <PortalHost name='MainPortal' />
                                                 <PortalHost name='BottomSheetPanelPortal' />
